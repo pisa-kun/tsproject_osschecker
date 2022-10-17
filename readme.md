@@ -55,6 +55,7 @@
  }
 }
 ```
+**"type": "module",** が必要
 
 > npm run start
 
@@ -70,4 +71,17 @@
  * @type {boolean}
  */
 const isSmartphoneAccess = true;
+
+/**
+ * 指定したディレクトリ配下のすべてのファイルをリストアップする
+ * @param {string} dirPath 検索するディレクトリのパス
+ * @return {Array<string>} ファイルのパスのリスト
+ */
+const listFiles = dirPath => {}
 ```
+
+#### omake memo
+
+> TypeError [ERR_UNKNOWN_FILE_EXTENSION]: Unknown file extension
+
+**package.json**から**"type":"module"**を削除する
