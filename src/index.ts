@@ -38,7 +38,11 @@ const getAllFiles = (dir: string): string[] => {
 const main = () => {
     const p = process.cwd();
     getAllFiles(p).filter(file => path.basename(file) === targetFileName)
-    .forEach(file => console.log(file));
+    .forEach(file => {
+        const from_json = JSON.parse(fs.readFileSync(file, 'utf8'));
+        console.log("devDependencies", file, ":", from_json.devDependencies);
+        console.log("dependencies", file, ":", from_json.dependencies);
+    });
 }
 
 main();
