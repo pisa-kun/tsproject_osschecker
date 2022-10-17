@@ -8,6 +8,12 @@ import * as path from "path";
 const seekRootDir = "C:\\Develop\\typescript\\programming_ts_oreilly";
 
 /**
+ * 取得したいファイル名
+ * @type {string}
+ */
+const targetFileName = "package.json"
+
+/**
  * 検索対象のファイル名を全て出力する
  * https://kuroeveryday.blogspot.com/2018/03/recursive-directory-search-with-nodejs.html
  * @param {string} dir 検索するディレクトリのパス
@@ -30,7 +36,9 @@ const getAllFiles = (dir: string): string[] => {
 }
 
 const main = () => {
-    getAllFiles(seekRootDir).map(files => console.log(files));
+    const p = process.cwd();
+    getAllFiles(p).filter(file => path.basename(file) === targetFileName)
+    .forEach(file => console.log(file));
 }
 
 main();
