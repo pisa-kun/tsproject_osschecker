@@ -12,6 +12,7 @@ interface OssVersionArray {
 /**
  * セマンティックバージョンを表すバリュークラス
  * @param {string} X.X.X表記の文字列
+ * TODO: 2.0.0-next.3 のような値への対応
  */
 class SemanticVersion{
     constructor(private readonly value: string){
@@ -86,15 +87,19 @@ const setMajorAndMinorOss = (minor: OssVersionArray, major: OssVersionArray, nam
 }
 
 const main = () => {
-    const p = process.cwd();
+    if(process.argv.length <= 1 || !fs.statSync(process.argv[2]).isDirectory()){
+        throw new Error("please set argument directory path");
+    }
+    const dir = process.argv[2];
 
-    getAllFiles(p).filter(file => path.basename(file) === targetFileName)
+    getAllFiles(dir).filter(file => path.basename(file) === targetFileName)
     .forEach(file => {
         const from_json = JSON.parse(fs.readFileSync(file, 'utf8'));
 
         const name = from_json["name"];
         const version = from_json["version"];
-        const semVer = new SemanticVersion(version);
+        // package.jsonにversionキーがないものが多かったのでキーがない場合skip
+        const semVer = version ? new SemanticVersion(version) : undefined;
         if(name && semVer) {
             setMajorAndMinorOss(ossMinorVer, ossMajorVer, name, semVer);
         }
