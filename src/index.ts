@@ -10,10 +10,23 @@ interface OssVersionArray {
 }
 
 /**
- * 検索対象のルートディレクトリ
- * @type {string}
+ * セマンティックバージョンを表すバリュークラス
+ * @param {string} X.X.X表記の文字列
  */
-const seekRootDir = "C:\\Develop\\typescript\\programming_ts_oreilly";
+class SemanticVersion{
+    constructor(private readonly value: string){
+        if(!value){
+            throw new Error("value is undefined");
+        }
+        if(!(/^\d+.\d+.\d+$/).test(value)){
+            throw new Error(`value(${value}) is not semantic pattern`);
+        }
+    }
+
+    getValue(): string {
+        return this.value;
+    }
+}
 
 /**
  * 取得したいファイル名
@@ -60,15 +73,15 @@ const getAllFiles = (dir: string): string[] => {
  * @param {OssVersionArray} minor マイナーバージョンを格納する連想配列
  * @param {OssVersionArray} major メジャーバージョンを格納する連想配列
  * @param {string} name oss名
- * @param {string} ver バージョン(x.x.x)
+ * @param {SemanticVersion} ver バージョン(x.x.x)
  */
-const setMajorAndMinorOss = (minor: OssVersionArray, major: OssVersionArray, name: string, ver: string) => {
-    if(!minor[name] || minor[name] > ver) {
-        minor[name] = ver;
+const setMajorAndMinorOss = (minor: OssVersionArray, major: OssVersionArray, name: string, ver: SemanticVersion) => {
+    if(!minor[name] || minor[name] > ver.getValue()) {
+        minor[name] = ver.getValue();
     }
     
-    if(!major[name] || major[name] < ver){
-        major[name] = ver
+    if(!major[name] || major[name] < ver.getValue()){
+        major[name] = ver.getValue()
     }
 }
 
@@ -81,8 +94,9 @@ const main = () => {
 
         const name = from_json["name"];
         const version = from_json["version"];
-        if(name && version) {
-            setMajorAndMinorOss(ossMinorVer, ossMajorVer, name, version);
+        const semVer = new SemanticVersion(version);
+        if(name && semVer) {
+            setMajorAndMinorOss(ossMinorVer, ossMajorVer, name, semVer);
         }
     });
     
