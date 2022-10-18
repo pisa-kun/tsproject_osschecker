@@ -2,6 +2,14 @@ import * as fs from "fs";
 import * as path from "path";
 
 /**
+ * OSS名
+ * @type {string}
+ */
+interface OssVersionArray {
+    [oss: string]: string;
+}
+
+/**
  * 検索対象のルートディレクトリ
  * @type {string}
  */
@@ -40,8 +48,7 @@ const main = () => {
     getAllFiles(p).filter(file => path.basename(file) === targetFileName)
     .forEach(file => {
         const from_json = JSON.parse(fs.readFileSync(file, 'utf8'));
-        console.log("devDependencies", file, ":", from_json.devDependencies);
-        console.log("dependencies", file, ":", from_json.dependencies);
+        console.log(from_json["name"], ":", from_json["version"]);
     });
 }
 
