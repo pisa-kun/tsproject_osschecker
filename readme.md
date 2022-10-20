@@ -10,6 +10,8 @@
 
 > npm install ts-node --save-dev  
 > npm install nodemon --save-dev
+
+> npm i jest @types/jest ts-jest --save-dev
 ---
 
 #### tsconfig.json

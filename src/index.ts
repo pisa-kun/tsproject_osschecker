@@ -1,5 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
+import { SemanticVersion } from "./semanticversion.js";
 
 /**
  * OSS名
@@ -7,26 +8,6 @@ import * as path from "path";
  */
 interface OssVersionArray {
   [oss: string]: string;
-}
-
-/**
- * セマンティックバージョンを表すバリュークラス
- * @param {string} X.X.X表記の文字列
- * TODO: 2.0.0-next.3 のような値への対応
- */
-class SemanticVersion {
-  constructor(private readonly value: string) {
-    if (!value) {
-      throw new Error("value is undefined");
-    }
-    if (!/^\d+.\d+.\d+$/.test(value)) {
-      throw new Error(`value(${value}) is not semantic pattern`);
-    }
-  }
-
-  getValue(): string {
-    return this.value;
-  }
 }
 
 /**
@@ -100,6 +81,7 @@ const main = () => {
   getAllFiles(dir)
     .filter((file) => path.basename(file) === targetFileName)
     .forEach((file) => {
+        console.log(file);
       const from_json = JSON.parse(fs.readFileSync(file, "utf8"));
 
       const name = from_json["name"];
