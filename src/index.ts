@@ -81,7 +81,6 @@ const main = () => {
   getAllFiles(dir)
     .filter((file) => path.basename(file) === targetFileName)
     .forEach((file) => {
-        console.log(file);
       const from_json = JSON.parse(fs.readFileSync(file, "utf8"));
 
       const name = from_json["name"];

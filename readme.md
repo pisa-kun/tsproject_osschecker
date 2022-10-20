@@ -11,8 +11,25 @@
 > npm install ts-node --save-dev  
 > npm install nodemon --save-dev
 
-> npm i jest @types/jest ts-jest --save-dev
+> npm i --save-dev jest @types/jest ts-jest
 ---
+
+npx jest --init で初期設定
+
+https://zenn.dev/zaki_yama/scraps/ab67ac109f2286
+
+#### jest.config.js
+```json
+export default {
+  preset: "ts-jest/presets/default-esm",
+  globals: {
+    "ts-jest": {
+      useESM: true,
+    },
+  },
+};
+```
+
 
 #### tsconfig.json
 ```json
