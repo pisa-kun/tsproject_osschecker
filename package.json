@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "start": "npm run build:live",
-    "format": "npx prettier --write src/index.ts",
+    "format": "npx prettier --write src/*.ts",
     "test": "jest",
     "build": "tsc -p .",
     "build:live": "nodemon --watch 'src/**/*.ts' --exec \"ts-node\" src/index.ts"
