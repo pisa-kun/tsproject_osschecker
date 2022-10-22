@@ -1,13 +1,16 @@
 import * as fs from "fs";
 import * as path from "path";
-import { SemanticVersion } from "./semanticversion.js";
+import {
+  SemanticVersion,
+  compareSemanticVerFirstMoreThanSecond,
+} from "./semanticversion.js";
 
 /**
  * OSS名
- * @type {string}
+ * @type {SemanticVersion}
  */
 interface OssVersionArray {
-  [oss: string]: string;
+  [oss: string]: SemanticVersion;
 }
 
 /**
@@ -63,12 +66,12 @@ const setMajorAndMinorOss = (
   name: string,
   ver: SemanticVersion
 ) => {
-  if (!minor[name] || minor[name] > ver.getValue()) {
-    minor[name] = ver.getValue();
+  if (!minor[name] || compareSemanticVerFirstMoreThanSecond(minor[name], ver)) {
+    minor[name] = ver;
   }
 
-  if (!major[name] || major[name] < ver.getValue()) {
-    major[name] = ver.getValue();
+  if (!major[name] || compareSemanticVerFirstMoreThanSecond(ver, major[name])) {
+    major[name] = ver;
   }
 };
 
@@ -94,7 +97,9 @@ const main = () => {
 
   console.log("oss, Minor X.X.X, Major X.X.X");
   for (const oss in ossMinorVer) {
-    console.log(`${oss}, ${ossMinorVer[oss]}, ${ossMajorVer[oss]}`);
+    console.log(
+      `${oss}, ${ossMinorVer[oss].getValue()}, ${ossMajorVer[oss].getValue()}`
+    );
   }
 };
 

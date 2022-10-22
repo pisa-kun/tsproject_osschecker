@@ -38,3 +38,31 @@ export class SemanticVersion {
    */
   getPatch = (): number => this.patch;
 }
+
+/**
+ * semanticVersionの大小比較
+ * @param {OssVersionArray} first マイナーバージョンを格納する連想配列
+ * @param {OssVersionArray} second メジャーバージョンを格納する連想配列
+ * @return {boolean} firstがsecondより大きい場合はtrue
+ */
+export const compareSemanticVerFirstMoreThanSecond = (
+  first: SemanticVersion,
+  second: SemanticVersion
+): boolean => {
+  if (first.getMajor() > second.getMajor()) {
+    return true;
+  } else if (first.getMajor() !== second.getMajor()) {
+    return false;
+  }
+
+  if (first.getMinor() > second.getMinor()) {
+    return true;
+  } else if (first.getMinor() !== second.getMinor()) {
+    return false;
+  }
+
+  if (first.getPatch() > second.getPatch()) {
+    return true;
+  }
+  return false;
+};
