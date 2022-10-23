@@ -84,6 +84,18 @@ const setMajorAndMinorOss = (
   }
 };
 
+/**
+ * JSON.parseのラッパーメソッド、読み込み・パース失敗時に空オブジェクトを返す
+ * @file {string} jsonファイルのパス
+ */
+const jsonParseWrap = (file: string): PackageJson | any => {
+  try {
+    return JSON.parse(fs.readFileSync(file, "utf8")) as PackageJson;
+  } catch (error) {
+    return {};
+  }
+};
+
 const main = () => {
   if (process.argv.length <= 1 || !fs.statSync(process.argv[2]).isDirectory()) {
     throw new Error("please set argument directory path");
@@ -93,17 +105,15 @@ const main = () => {
   getAllFiles(dir)
     .filter((file) => path.basename(file) === targetFileName)
     .forEach((file) => {
-      const from_json = JSON.parse(
-        fs.readFileSync(file, "utf8")
-      ) as PackageJson;
+      const from_json = jsonParseWrap(file);
 
-      // TODO : 
-      if(!('name' in from_json) || !('version' in from_json)) {
+      // TODO :
+      if (!("name" in from_json) || !("version" in from_json)) {
         return;
       }
       const name = from_json["name"];
       const version = from_json["version"];
-      
+
       const semVer = new SemanticVersion(version);
       setMajorAndMinorOss(ossMinorVer, ossMajorVer, name, semVer);
     });
