@@ -14,6 +14,15 @@ interface OssVersionArray {
 }
 
 /**
+ * Package.jsonはnameとversionのキーを必ず持つ
+ * @type {SemanticVersion}
+ */
+interface PackageJson {
+  name: string;
+  version: string;
+}
+
+/**
  * 取得したいファイル名
  * @type {string}
  */
@@ -84,15 +93,19 @@ const main = () => {
   getAllFiles(dir)
     .filter((file) => path.basename(file) === targetFileName)
     .forEach((file) => {
-      const from_json = JSON.parse(fs.readFileSync(file, "utf8"));
+      const from_json = JSON.parse(
+        fs.readFileSync(file, "utf8")
+      ) as PackageJson;
 
+      // TODO : 
+      if(!('name' in from_json) || !('version' in from_json)) {
+        return;
+      }
       const name = from_json["name"];
       const version = from_json["version"];
-      // package.jsonにversionキーがないものが多かったのでキーがない場合skip
-      const semVer = version ? new SemanticVersion(version) : undefined;
-      if (name && semVer) {
-        setMajorAndMinorOss(ossMinorVer, ossMajorVer, name, semVer);
-      }
+      
+      const semVer = new SemanticVersion(version);
+      setMajorAndMinorOss(ossMinorVer, ossMajorVer, name, semVer);
     });
 
   console.log("oss, Minor X.X.X, Major X.X.X");
